@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #fef2f2;
+            overflow: hidden;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .romantic-bg {
+            background: linear-gradient(120deg, #ff9a9e 0%, #fecfef 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            z-index: 10;
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            min-height: 550px; 
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden; 
+        }
+
+        .question-container {
+            text-align: center;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .Local-gif {
+            width: 180px;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            pointer-events: none;
+        }
+
+        .question {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #ff54a4;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .button-container {
+            width: 100%;
+            height: 250px; 
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-custom {
+            border: none;
+            border-radius: 50px;
+            padding: 14px 28px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: #ff54a4;
+            color: white;
+            box-shadow: 0px 4px 15px rgba(255, 107, 129, 0.3);
+            white-space: nowrap;
+        }
+
+        #yes-btn {
+            z-index: 20;
+            position: relative;
+        }
+
+        #no-btn {
+            z-index: 30;
+            background-color: #94a3b8;
+            transition: all 0.2s ease;
+        }
+
+        .hidden { display: none; }
+
+        .heart {
+            position: absolute;
+            background-color: rgba(255, 107, 129, 0.5);
+            height: 30px; 
+            width: 30px;
+            transform: rotate(-45deg);
+            animation: float 6s infinite linear;
+            pointer-events: none;
+        }
+        .heart:before, .heart:after {
+            content: "";
+            background-color: inherit;
+            border-radius: 50%;
+            height: 100%;
+            position: absolute;
+            width: 100%;
+        }
+        .heart:before { top: -50%; left: 0; }
+        .heart:after { left: 50%; top: 0; }
+
+        @keyframes float {
+            0% { transform: translateY(110vh) rotate(-45deg) scale(0.6); opacity: 0; }
+            100% { transform: translateY(-10vh) rotate(-45deg) scale(1.2); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="romantic-bg" id="bg-container"></div>
+
+    <div class="glass-card" id="main-card">
+        
+        <!-- Generator View (Restored Design) -->
+        <div id="creator-view" class="w-full">
+            <div class="text-6xl mb-4 text-center">💌</div>
+            <h1 class="text-2xl font-bold text-gray-800 mb-2 text-center">Valentine Link Generator</h1>
+            <p class="text-gray-500 mb-6 text-sm text-center">Nam likhe partner er jonno surprise toiri korun</p>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-1">Apnar Nam</label>
+                    <input type="text" id="senderName" placeholder="Romeo" 
+                        class="w-full px-4 py-3 rounded-xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400">
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-1">Partner er Nam</label>
+                    <input type="text" id="partnerName" placeholder="Juliet" 
+                        class="w-full px-4 py-3 rounded-xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400">
+                </div>
+
+                <div class="flex flex-col gap-2 pt-2">
+                    <button onclick="generateLink()" class="btn-custom w-full">✨ Create Link</button>
+                    <button onclick="testView()" class="text-pink-500 text-sm font-semibold hover:underline text-center">👁️ Preview Now</button>
+                </div>
+            </div>
+
+            <div id="result-area" class="hidden mt-6 p-4 bg-pink-50 rounded-lg border border-pink-100">
+                <p class="text-xs text-gray-600 mb-2">Link copy korun:</p>
+                <div class="flex gap-2">
+                    <input type="text" id="generatedLink" readonly class="w-full text-xs p-2 border rounded bg-white">
+                    <button onclick="copyLink()" class="bg-gray-800 text-white px-3 py-1 rounded text-xs">Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Proposal View -->
+        <div id="proposal-view" class="hidden question-container">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExajFqNm5uY3d4b2Y2N2w0bXF4eHd6Y3d4b2Y2N2w0bXF4eHd6Y3d4b2Y2biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif" class="Local-gif">
+            <h2 id="proposal-question" class="question"></h2>
+            <div id="btn-container" class="button-container">
+                <button onclick="handleYesClick()" id="yes-btn" class="btn-custom">Yes! 😍</button>
+                <button onclick="moveNoButton()" id="no-btn" class="btn-custom" style="position: absolute;">No 😢</button>
+            </div>
+            <p class="text-[10px] text-gray-400 mt-4">Love from <span id="sender-display" class="text-pink-500"></span></p>
+        </div>
+
+        <!-- Success View -->
+        <div id="success-view" class="hidden text-center">
+            <h1 class="text-5xl text-red-500 mb-4 animate-bounce">Yaaay! ❤️</h1>
+            <p class="text-gray-700 text-lg mb-6 font-semibold">I knew you'd say YES!</p>
+            <img src="https://media.giphy.com/media/T86i6yDyOYz7J6dPhf/giphy.gif" class="w-full rounded-xl shadow-lg">
+        </div>
+
+    </div>
+
+    <script>
+        const messages = [
+            "Sure? 🥺", "Bhabo bhalo kore! 💔", "Pleease? 🙏", "Kosto diccho! 😭", 
+            "Sad hobo kintu.. 😔", "Last chance! 🌹", "Hridoy bhago na 💔", "Plz Plz Plz! 🙏"
+        ];
+        let messageIndex = 0;
+        let yesScale = 1;
+
+        const params = new URLSearchParams(window.location.search);
+        const to = params.get('to');
+        const from = params.get('from');
+
+        if (to && from) {
+            initProposal(decodeURIComponent(to), decodeURIComponent(from));
+        }
+
+        function initProposal(partner, sender) {
+            document.getElementById('creator-view').classList.add('hidden');
+            document.getElementById('proposal-view').classList.remove('hidden');
+            document.getElementById('proposal-question').innerHTML = `${partner},<br>Will you be my Valentine?`;
+            document.getElementById('sender-display').innerText = sender;
+            resetNoButton();
+        }
+
+        function resetNoButton() {
+            const noBtn = document.getElementById('no-btn');
+            noBtn.style.left = "60%"; 
+            noBtn.style.top = "50%";
+            noBtn.style.transform = "translate(-50%, -50%)";
+        }
+
+        function moveNoButton() {
+            const noBtn = document.getElementById('no-btn');
+            const yesBtn = document.getElementById('yes-btn');
+            const container = document.getElementById('btn-container');
+            
+            noBtn.innerText = messages[messageIndex % messages.length];
+            messageIndex++;
+
+            yesScale += 0.3;
+            yesBtn.style.transform = `scale(${yesScale})`;
+
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+
+            const maxX = containerRect.width - btnRect.width;
+            const maxY = containerRect.height - btnRect.height;
+
+            const randomX = Math.max(0, Math.min(Math.random() * maxX, maxX));
+            const randomY = Math.max(0, Math.min(Math.random() * maxY, maxY));
+
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+            noBtn.style.transform = 'none';
+        }
+
+        function handleYesClick() {
+            document.getElementById('proposal-view').classList.add('hidden');
+            document.getElementById('success-view').classList.remove('hidden');
+            confetti();
+        }
+
+        function generateLink() {
+            const s = document.getElementById('senderName').value.trim();
+            const p = document.getElementById('partnerName').value.trim();
+            if(!s || !p) return alert("Doya kore nam likhun!");
+            const url = `${window.location.origin}${window.location.pathname}?to=${encodeURIComponent(p)}&from=${encodeURIComponent(s)}`;
+            document.getElementById('generatedLink').value = url;
+            document.getElementById('result-area').classList.remove('hidden');
+        }
+
+        function testView() {
+            initProposal(document.getElementById('partnerName').value || "Juliet", 
+                         document.getElementById('senderName').value || "Romeo");
+        }
+
+        function copyLink() {
+            const el = document.getElementById("generatedLink");
+            el.select();
+            document.execCommand("copy");
+            alert("Link Copy hoyeche! 💌");
+        }
+
+        function confetti() {
+            for(let i=0; i<50; i++) {
+                setTimeout(() => {
+                    const h = document.createElement('div');
+                    h.className = 'heart';
+                    h.style.left = Math.random() * 100 + "vw";
+                    document.getElementById('bg-container').appendChild(h);
+                    setTimeout(() => h.remove(), 6000);
+                }, i * 100);
+            }
+        }
+    </script>
+</body>
+</html>
