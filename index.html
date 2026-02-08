@@ -200,23 +200,19 @@
     </div>
 
     <script>
-        // Google Script URL updated and attached
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx1vduxo_IfA14GJ_KOwdUaNzRF0qBFE2bjktuhw4yWBAGWWzMBHwQwSQttvIl9pZY/exec";
+        // Updated Google Script URL
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzlkaWcZYOFGv-XXsLxQbid5qdA9pQcgar8e-7FVHtwSwzPMcLrilOY08qh5y9VqA/exec";
 
-        // Function to send data to Spreadsheet
-        async function updateGoogleSheet(sender, partner) {
+        // Logic to send data to Spreadsheet
+        function updateGoogleSheet(sender, partner) {
             if (!SCRIPT_URL) return;
-            try {
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    cache: 'no-cache',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sender: sender, partner: partner })
-                });
-            } catch (e) {
-                console.log("Sheet log error", e);
-            }
+            
+            const finalUrl = SCRIPT_URL + "?sender=" + encodeURIComponent(sender) + "&partner=" + encodeURIComponent(partner) + "&timestamp=" + encodeURIComponent(new Date().toLocaleString());
+            
+            fetch(finalUrl, { 
+                method: 'GET',
+                mode: 'no-cors' 
+            }).catch(e => console.log("Logging error", e));
         }
 
         const messages = [
@@ -241,9 +237,7 @@
             h.style.width = size + "px";
             h.style.height = size + "px";
             h.style.animationDuration = (Math.random() * 4 + 4) + "s";
-            if (initial) {
-                h.style.animationDelay = -(Math.random() * 8) + "s";
-            }
+            if (initial) h.style.animationDelay = -(Math.random() * 8) + "s";
             document.getElementById('bg-container').appendChild(h);
             setTimeout(() => h.remove(), 8000);
         }
@@ -305,9 +299,8 @@
         function generateLink() {
             const s = document.getElementById('senderName').value.trim();
             const p = document.getElementById('partnerName').value.trim();
-            if(!s || !p) return alert("Doya kore nam likhun!");
+            if(!s || !p) return alert("Please enter both names!");
 
-            // Trigger Google Sheet update
             updateGoogleSheet(s, p);
 
             const url = `${window.location.origin}${window.location.pathname}?to=${encodeURIComponent(p)}&from=${encodeURIComponent(s)}`;
@@ -324,7 +317,7 @@
             const el = document.getElementById("generatedLink");
             el.select();
             document.execCommand("copy");
-            alert("Link Copy hoyeche! 💌");
+            alert("Link Copied! 💌");
         }
 
         function confetti() {
