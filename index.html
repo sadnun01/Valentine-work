@@ -1,3 +1,10 @@
+<!-- 
+************************************************************
+* Project: Valentine Proposal Surprise Maker
+* Developed by: NABIAL NAHIN SADNUN
+* Description: Minimal & Interactive Valentine Proposal Tool
+************************************************************
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -107,14 +114,14 @@
 
         .hidden { display: none; }
 
+        /* Floating Hearts Animation */
         .heart {
             position: absolute;
-            background-color: rgba(255, 107, 129, 0.5);
-            height: 30px; 
-            width: 30px;
+            background-color: rgba(255, 107, 129, 0.35);
             transform: rotate(-45deg);
             animation: float 6s infinite linear;
             pointer-events: none;
+            z-index: 0;
         }
         .heart:before, .heart:after {
             content: "";
@@ -129,7 +136,19 @@
 
         @keyframes float {
             0% { transform: translateY(110vh) rotate(-45deg) scale(0.6); opacity: 0; }
-            100% { transform: translateY(-10vh) rotate(-45deg) scale(1.2); opacity: 0; }
+            20% { opacity: 0.7; }
+            100% { transform: translateY(-20vh) rotate(-45deg) scale(1.2); opacity: 0; }
+        }
+
+        /* Minimal Branding Style */
+        .dev-credit {
+            position: absolute;
+            bottom: 12px;
+            font-size: 9px;
+            color: #d1d5db; /* Very light gray */
+            letter-spacing: 0.5px;
+            pointer-events: none;
+            text-transform: uppercase;
         }
     </style>
 </head>
@@ -139,20 +158,20 @@
 
     <div class="glass-card" id="main-card">
         
-        <!-- Generator View (Restored Design) -->
+        <!-- Generator View -->
         <div id="creator-view" class="w-full">
             <div class="text-6xl mb-4 text-center">💌</div>
             <h1 class="text-2xl font-bold text-gray-800 mb-2 text-center">Valentine Link Generator</h1>
-            <p class="text-gray-500 mb-6 text-sm text-center">Nam likhe partner er jonno surprise toiri korun</p>
+            <p class="text-gray-500 mb-6 text-sm text-center">Write your partner’s name and create a surprise they’ll never forget✨</p>
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-1">Apnar Nam</label>
+                    <label class="block text-gray-700 text-sm font-bold mb-1">Your Name</label>
                     <input type="text" id="senderName" placeholder="Romeo" 
                         class="w-full px-4 py-3 rounded-xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400">
                 </div>
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-1">Partner er Nam</label>
+                    <label class="block text-gray-700 text-sm font-bold mb-1">Your Partner's Name</label>
                     <input type="text" id="partnerName" placeholder="Juliet" 
                         class="w-full px-4 py-3 rounded-xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-400">
                 </div>
@@ -164,7 +183,7 @@
             </div>
 
             <div id="result-area" class="hidden mt-6 p-4 bg-pink-50 rounded-lg border border-pink-100">
-                <p class="text-xs text-gray-600 mb-2">Link copy korun:</p>
+                <p class="text-xs text-gray-600 mb-2">Copy the link:</p>
                 <div class="flex gap-2">
                     <input type="text" id="generatedLink" readonly class="w-full text-xs p-2 border rounded bg-white">
                     <button onclick="copyLink()" class="bg-gray-800 text-white px-3 py-1 rounded text-xs">Copy</button>
@@ -190,6 +209,9 @@
             <img src="https://media.giphy.com/media/T86i6yDyOYz7J6dPhf/giphy.gif" class="w-full rounded-xl shadow-lg">
         </div>
 
+        <!-- Minimal Credit Signature -->
+        <div class="dev-credit">Developed by NABIAL NAHIN SADNUN</div>
+
     </div>
 
     <script>
@@ -199,6 +221,40 @@
         ];
         let messageIndex = 0;
         let yesScale = 1;
+
+        // Auto-generate background hearts on load
+        window.onload = function() {
+            // Initial burst of hearts for immediate effect
+            for(let i=0; i<40; i++) {
+                createBackgroundHeart(true);
+            }
+            // Higher frequency generation for more quantity
+            setInterval(() => createBackgroundHeart(false), 300);
+        };
+
+        function createBackgroundHeart(initial) {
+            const h = document.createElement('div');
+            h.className = 'heart';
+            h.style.left = Math.random() * 100 + "vw";
+            
+            // Randomize size: bigger overall, plus variation
+            // Range: approx 15px to 40px
+            const size = Math.floor(Math.random() * 25) + 15;
+            h.style.width = size + "px";
+            h.style.height = size + "px";
+            
+            h.style.animationDuration = (Math.random() * 4 + 4) + "s";
+            
+            if (initial) {
+                // Spread out the initial batch across the screen height
+                h.style.animationDelay = -(Math.random() * 8) + "s";
+            }
+            
+            document.getElementById('bg-container').appendChild(h);
+            
+            // Clean up to prevent memory issues with high quantity
+            setTimeout(() => h.remove(), 8000);
+        }
 
         const params = new URLSearchParams(window.location.search);
         const to = params.get('to');
@@ -276,14 +332,16 @@
         }
 
         function confetti() {
-            for(let i=0; i<50; i++) {
+            // Intense heart burst on success
+            for(let i=0; i<100; i++) {
                 setTimeout(() => {
                     const h = document.createElement('div');
                     h.className = 'heart';
                     h.style.left = Math.random() * 100 + "vw";
+                    h.style.backgroundColor = "rgba(255, 0, 0, 0.6)";
                     document.getElementById('bg-container').appendChild(h);
                     setTimeout(() => h.remove(), 6000);
-                }, i * 100);
+                }, i * 50);
             }
         }
     </script>
