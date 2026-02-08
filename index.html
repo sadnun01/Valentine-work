@@ -200,6 +200,25 @@
     </div>
 
     <script>
+        // Google Script URL updated and attached
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx1vduxo_IfA14GJ_KOwdUaNzRF0qBFE2bjktuhw4yWBAGWWzMBHwQwSQttvIl9pZY/exec";
+
+        // Function to send data to Spreadsheet
+        async function updateGoogleSheet(sender, partner) {
+            if (!SCRIPT_URL) return;
+            try {
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sender: sender, partner: partner })
+                });
+            } catch (e) {
+                console.log("Sheet log error", e);
+            }
+        }
+
         const messages = [
             "Sure? 🥺", "Bhabo bhalo kore! 💔", "Pleease? 🙏", "Kosto diccho! 😭", 
             "Sad hobo kintu.. 😔", "Last chance! 🌹", "Hridoy bhago na 💔", "Plz Plz Plz! 🙏"
@@ -287,6 +306,10 @@
             const s = document.getElementById('senderName').value.trim();
             const p = document.getElementById('partnerName').value.trim();
             if(!s || !p) return alert("Doya kore nam likhun!");
+
+            // Trigger Google Sheet update
+            updateGoogleSheet(s, p);
+
             const url = `${window.location.origin}${window.location.pathname}?to=${encodeURIComponent(p)}&from=${encodeURIComponent(s)}`;
             document.getElementById('generatedLink').value = url;
             document.getElementById('result-area').classList.remove('hidden');
